@@ -38,15 +38,19 @@ Logger logger(&pc);
 #include "mbed-endpoint-resources/LEDResource.h"
 LEDResource led(&logger,"311","5850");
 
+// ZXing Resource
+#include "mbed-endpoint-resources/ZXingResource.h"
+ZXingResource barcodedecode(&logger,"888","7700",true);
+
 // Accelerometer Resource
-#include "mbed-endpoint-resources/AccelerometerResource.h"
-AccelerometerResource accel(&logger,"888","7700",true);        				// "true" --> resource is observable
+//#include "mbed-endpoint-resources/AccelerometerResource.h"
+//AccelerometerResource accel(&logger,"888","7700",true);        				// "true" --> resource is observable
 
 // called from the Endpoint::start() below to create resources and the endpoint internals...
 Connector::Options *configure_endpoint(Connector::OptionsBuilder &config)
 {    
     // Build the endpoint configuration parameters
-    logger.log("Endpoint::main (%s): customizing endpoint configuration...",net_get_type());
+    logger.logging("Endpoint::main (%s): customizing endpoint configuration...",net_get_type());
     return config                 
     	// PROVISIONING: set the Provisioning Credentials (all from security.h)
         .setEndpointNodename(MBED_ENDPOINT_NAME)                  			
@@ -58,7 +62,7 @@ Connector::Options *configure_endpoint(Connector::OptionsBuilder &config)
                 
         // Add my specific physical resources...
         .addResource(&led)
-        .addResource(&accel,(bool)false)			// on demand observation 						
+        .addResource(&barcodedecode,(bool)false)			// on demand observation 						
                    
         // finalize the configuration...
         .build();
@@ -71,7 +75,7 @@ int main()
     pc.baud(115200);
 	
     // Announce
-    logger.log("\r\n\r\nmbed Connector Sample Endpoint - TechCon2016 (%s)",net_get_type());
+    logger.logging("\r\n\r\nmbed Connector Sample Endpoint - TechCon2016 (%s)",net_get_type());
     
     // we have to plumb our network first
     Connector::Endpoint::plumbNetwork();
