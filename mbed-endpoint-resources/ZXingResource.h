@@ -444,7 +444,7 @@ void _zxing_loop(const void *args) {
     vector<Ref<Result> > results;
      
     while (true) {
-#if 0
+#if 1
         decode_buffer = FrameBufferTbl[write_buff_num];
         write_buff_num++;
 
